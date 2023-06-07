@@ -54,6 +54,10 @@ class AuthController extends ResourceController
     public function login()
     {
         // Handle user login and also generate token
+        if (auth()->loggedIn()) {
+            auth()->logout();
+        }
+
         $rules = [
             "email" => "required|valid_email",
             "password" => "required"
@@ -129,6 +133,17 @@ class AuthController extends ResourceController
     public function logout()
     {
         // Handle user logout, destroy token
+        if (auth()->loggedIn()) {
+            auth()->logout();
+            auth()->user()->revokeAllAccessTokens();
+
+            return $this->respond($this->genericResponse(
+                ResponseInterface::HTTP_OK,
+                "User logged out successfully",
+                false,
+                []
+            ), ResponseInterface::HTTP_OK);
+        }
     }
 
     public function invalidRequest()
