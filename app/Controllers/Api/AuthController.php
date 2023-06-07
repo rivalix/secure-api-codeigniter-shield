@@ -116,4 +116,24 @@ class AuthController extends ResourceController
     {
         // Handle user logout, destroy token
     }
+
+    public function invalidRequest()
+    {
+        return $this->respond($this->genericResponse(
+            ResponseInterface::HTTP_FORBIDDEN,
+            "Invalid Request, please login",
+            true,
+            []
+        ), ResponseInterface::HTTP_FORBIDDEN);
+    }
+
+    public function genericResponse(int $status, string $message, bool $error, array $data): array
+    {
+        return [
+            "status" => $status,
+            "message" => $message,
+            "error" => $error,
+            "data" => $data,
+        ];
+    }
 }
