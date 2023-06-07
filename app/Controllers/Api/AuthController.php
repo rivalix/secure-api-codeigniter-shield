@@ -54,6 +54,55 @@ class AuthController extends ResourceController
     public function login()
     {
         // Handle user login and also generate token
+        $rules = [
+            "email" => "required|valid_email",
+            "password" => "required"
+        ];
+
+        if (!$this->validate($rules)) {
+            $response = [
+                "status" => ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
+                "message" => $this->validator->getErrors(),
+                "error" => true,
+                "data" => []
+            ];
+
+            return $this->respond($response, ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $credentials = [
+            "email" => $this->request->getVar("email"),
+            "password" => $this->request->getVar("password")
+        ];
+
+        $loginAttempt = auth()->attempt($credentials);
+
+        if (!$loginAttempt->isOK()) {
+            $response = [
+                "status" => ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
+                "message" => "Invalid credentials",
+                "error" => true,
+                "data" => []
+            ];
+
+            return $this->respond($response, ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $userObject = new UserModel();
+        $user_data = $userObject->findById(auth()->id());
+        $token = $user_data->generateAccessToken("Th1sIsMyS3cur3Ap1");
+        $auth_token = $token->raw_token;
+
+        $response = [
+            "status" => ResponseInterface::HTTP_OK,
+            "message" => "User logged in",
+            "error" => false,
+            "data" => [
+                "token" => $auth_token,
+            ]
+        ];
+
+        return $this->respond($response, ResponseInterface::HTTP_OK);
     }
 
     // Profile endpoint
