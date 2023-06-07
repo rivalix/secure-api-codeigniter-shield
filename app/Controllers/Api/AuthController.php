@@ -109,6 +109,20 @@ class AuthController extends ResourceController
     public function profile()
     {
         // Get logged is user info
+        if (auth("tokens")->loggedIn()) {
+            $userId = auth()->id();
+            $userObject = new UserModel();
+            $userData = $userObject->findById($userId);
+
+            return $this->respond($this->genericResponse(
+                ResponseInterface::HTTP_OK,
+                "User profile",
+                false,
+                [
+                    "user" => $userData
+                ]
+            ), ResponseInterface::HTTP_OK);
+        }
     }
 
     // Logout endpoint
