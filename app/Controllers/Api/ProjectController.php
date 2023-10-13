@@ -63,7 +63,19 @@ class ProjectController extends ResourceController
     // List projects that belongs to user, through toke
     public function listProjects()
     {
+        $user_id = auth()->id();
+        $projectObj = new ProjectModel();
 
+        $projects = $projectObj->where(['user_id' => $user_id])->get()->getResultArray();
+
+        return $this->respond(
+            $this->genericResponse(
+                ResponseInterface::HTTP_OK,
+                "Projects found",
+                false,
+                ["projects" => $projects]
+            )
+        );
     }
 
     // Delete project that belongs to user, through toke
