@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "codeigniter4/framework": "^4.0",
+        "codeigniter4/framework": "^v4.3.8",
         "codeigniter4/settings": "^2.1",
         "codeigniter4/shield": "^1.0@beta"
     },

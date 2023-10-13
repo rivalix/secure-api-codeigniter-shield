@@ -156,7 +156,7 @@ class AuthController extends ResourceController
         ), ResponseInterface::HTTP_FORBIDDEN);
     }
 
-    public function genericResponse(int $status, string $message, bool $error, array $data): array
+    public function genericResponse(int $status, string | array $message, bool $error, array $data): array
     {
         return [
             "status" => $status,
