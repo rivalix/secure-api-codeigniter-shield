@@ -17,7 +17,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
 
     $routes->post('add-project', 'ProjectController::addProject', ['filter' => 'apiauth']);
     $routes->get('list-projects', 'ProjectController::listProjects', ['filter' => 'apiauth']);
-    $routes->delete('delete-project/(:any)', 'ProjectController::deleteProject', ['filter' => 'apiauth']);
+    $routes->delete('delete-project/(:any)', 'ProjectController::deleteProject/$1', ['filter' => 'apiauth']);
 
     $routes->get('invalid', 'AuthController::invalidRequest');
 });

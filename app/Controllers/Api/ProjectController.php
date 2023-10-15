@@ -81,7 +81,40 @@ class ProjectController extends ResourceController
     // Delete project that belongs to user, through toke
     public function deleteProject($project_id)
     {
+        $user_id = auth()->id();
+        $projectObj = new ProjectModel();
 
+        $project = $projectObj->where(
+            [
+                "id" => $project_id,
+                "user_id" => $user_id
+            ]
+        )->get()->getRowArray();
+
+        if(empty($project)) {
+            return $this->respond(
+                $this->genericResponse(
+                    ResponseInterface::HTTP_NOT_FOUND,
+                    "Project not found",
+                    true,
+                    []
+                )
+            );
+        }
+
+        $projectObj->where([
+            "id" => $project_id,
+            "user_id" => $user_id
+        ])->delete();
+
+        return $this->respond(
+            $this->genericResponse(
+                ResponseInterface::HTTP_OK,
+                "Project deleted",
+                false,
+                []
+            )
+        );
     }
 
     public function genericResponse(int $status, string|array $message, bool $error, array $data): array
